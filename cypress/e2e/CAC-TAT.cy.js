@@ -12,7 +12,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#lastName').type('Oliveira da Cruz')
     cy.get('#email').type('pauloh.2903@gmail.com')
     cy.get('#open-text-area').type('Obrigado pela MANUELLA!!!')
-    cy.get('button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click() 
 
     cy.get('.success').should('be.visible')
   })
@@ -26,7 +26,7 @@ it('preenche os campos para treinar', () =>{
   cy.get('#lastName').type('Cruz')
   cy.get('#email').type('manuella@gmail.com')
   cy.get('#open-text-area').type(longText, { delay:0 })  //parâmetro para tirar os 10 milisegundos de digitação default
-  cy.get('button[type="submit"]').click()
+  cy.contains('button', 'Enviar').click() 
 
   cy.get('.success').should('be.visible')
   })
@@ -37,7 +37,7 @@ it('exibe mensagem de erro ao submeter o formulário com um email com formataç�
   cy.get('#lastName').type('Cruz')
   cy.get('#email').type('manuella.gmail.zzz')  //e-mail inválido
   cy.get('#open-text-area').type('Princesinha linda do papai !!!')
-  cy.get('button[type="submit"]').click()
+  cy.contains('button', 'Enviar').click() 
 
   cy.get('.error').should('be.visible')
   })  
@@ -76,7 +76,7 @@ Tal teste deve verificar o valor (value) após a digitação (.type(...).should(
       .clear()
       .should('have.value', '') 
     
-    cy.get('button[type="submit"]').click()    
+      cy.contains('button', 'Enviar').click()   
     }) 
 
     /*Exercício extra 6
@@ -84,7 +84,7 @@ Tal teste deve verificar o valor (value) após a digitação (.type(...).should(
       O teste deve simplesmente acessar a aplicação e clicar no botão Enviar
       Tal teste deve verificar que uma mensagem é exibida em um elemento com a classe error*/
     it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () =>{       
-      cy.get('button[type="submit"]').click()   
+      cy.contains('button', 'Enviar').click()   
       cy.get('.error').should('be.visible') 
       }) 
 
@@ -96,7 +96,7 @@ Criar um teste chamado envia o formuário com sucesso usando um comando customiz
 Tal teste deve fazer uso de um comando chamado fillMandatoryFieldsAndSubmit, o qual deve ser implementado no arquivo cypress/support/commands.js
 👨‍🏫 Sugiro que você experimente diferentes implementações para o mesmo comando (por exemplo, um comando que não recebe nenhum argumento; um comando que recebe um objeto como argumento; um comando que recebe um objeto como argumento, com valores padrão).
 Deve haver a verificação de que a mensagem de sucesso é exibida*/
-it('envia o formuário com sucesso usando um comando customizado', () => { 
+it.only('envia o formuário com sucesso usando um comando customizado', () => { 
   const data = {
     firstName: 'Paulo Henrique',
     lastName: 'Oliveira da Cruz',
@@ -106,7 +106,26 @@ it('envia o formuário com sucesso usando um comando customizado', () => {
 
   cy.fillMandatoryFieldsAndSubmit(data)
   
-  cy.get('.sucess').should('be.visible')   
+  cy.get('.success').should('be.visible')   
   }) 
 
+
+it('seleciona um produto (YouTube) por seu texto', () => {
+  cy.get('#product')
+    .select('YouTube')
+    .should('have.value', 'youtube')  // a validação não foi por texto mas foi por value
 })
+
+it('seleciona um produto (Mentoria) por seu valor', () => {
+  cy.get('#product')
+    .select('mentoria')
+    .should('have.value', 'mentoria')  
+})
+
+it('seleciona um produto (Blog) por seu índice', () => {
+  cy.get('#product')
+    .select(1)  //índice 1 igual a "Blog"
+    .should('have.value', 'blog')  
+})
+
+}) 
