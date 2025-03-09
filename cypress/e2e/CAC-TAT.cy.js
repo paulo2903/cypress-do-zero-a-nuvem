@@ -60,16 +60,19 @@ Tal teste deve verificar o valor (value) após a digitação (.type(...).should(
       .should('have.value', 'Manuella França')
       .clear()
       .should('have.value', '')
+
     cy.get('#lastName')
       .type('Cruz')
       .should('have.value', 'Cruz')
       .clear()
       .should('have.value', '')
+
     cy.get('#email')
       .type('manuella@gmail.com')      
       .should('have.value', 'manuella@gmail.com')
       .clear()
       .should('have.value', '') 
+
     cy.get('#phone')
       .type('123456789')
       .should('have.value', '123456789')
@@ -96,7 +99,7 @@ Criar um teste chamado envia o formuário com sucesso usando um comando customiz
 Tal teste deve fazer uso de um comando chamado fillMandatoryFieldsAndSubmit, o qual deve ser implementado no arquivo cypress/support/commands.js
 👨‍🏫 Sugiro que você experimente diferentes implementações para o mesmo comando (por exemplo, um comando que não recebe nenhum argumento; um comando que recebe um objeto como argumento; um comando que recebe um objeto como argumento, com valores padrão).
 Deve haver a verificação de que a mensagem de sucesso é exibida*/
-it.only('envia o formuário com sucesso usando um comando customizado', () => { 
+it('envia o formuário com sucesso usando um comando customizado', () => { 
   const data = {
     firstName: 'Paulo Henrique',
     lastName: 'Oliveira da Cruz',
@@ -126,6 +129,53 @@ it('seleciona um produto (Blog) por seu índice', () => {
   cy.get('#product')
     .select(1)  //índice 1 igual a "Blog"
     .should('have.value', 'blog')  
+})
+
+it('marca o tipo de atendimento "Feedback"', () => {
+  cy.get('input[type="radio"][value="feedback"]')
+    .check()
+    .should('be.checked')    
+})
+
+/*Exercício extra
+Crie um teste chamado marca cada tipo de atendimento
+Faça a verificação de que após o .check(), cada radio foi marcado (.should('be.checked'))*/
+it('marca cada tipo de atendimento', () => {
+  cy.get('input[type="radio"][value="ajuda"]')
+  .check()
+  .should('be.checked') 
+
+  cy.get('input[type="radio"][value="elogio"]')
+  .check()
+  .should('be.checked') 
+
+  cy.get('input[type="radio"][value="feedback"]')
+  .check()
+  .should('be.checked')  
+       
+})
+
+/*Exercício
+Crie um teste chamado marca ambos checkboxes, depois desmarca o último
+O teste deve possuir verificações de que ambos checkboxes foram marcados, e depois, que o último (.last()) foi desmarcado */
+it('marca ambos checkboxes, depois desmarca o último', () =>{
+  cy.get('#email-checkbox')
+    .check()
+    .should('be.checked')
+
+    cy.get('#phone-checkbox')
+    .check()
+    .should('be.checked')
+    .uncheck()
+    .should('not.be.checked')
+
+    /* outra forma de se fazer */
+    cy.get('input[type="checkbox"]') //dessa forma mais genérica se refere a todos os checks que existirem na página
+    .check()
+    .should('be.checked')
+    .last()  //referencia o último check
+    .uncheck()  //desmarca
+    .should('not.be.checked')
 })
 
 }) 
