@@ -49,6 +49,17 @@ it('exibe mensagem de erro ao submeter o formulário com um email com formataç�
       .should('have.value', '') //verifica se o campo ficou vazio como mostra nas aspas simples. 
   })
 
+  it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido', () =>{
+    cy.get('#firstName').type('Paulo Henrique')
+    cy.get('#lastName').type('Cruz')
+    cy.get('#email').type('manuella@gmail.com')
+    cy.get('#open-text-area').type('Manuella, a Princesinha linda do papai !!!')
+    cy.get('#phone-checkbox').check()
+    cy.contains('button', 'Enviar').click() 
+  
+    cy.get('.error').should('be.visible')
+  })
+
   
   /* Exercício extra 5
 Uma funcionalidade que pode ser usada em conjunto com comando o .type(), é o .clear(), o qual limpa um campo, para posterior digitação, por exemplo.
@@ -178,4 +189,74 @@ it('marca ambos checkboxes, depois desmarca o último', () =>{
     .should('not.be.checked')
 })
 
-}) 
+/*=======================================
+Fazendo upload de arquivos com Cypress
+/*=======================================*/
+
+/*Crie um teste chamado seleciona um arquivo simulando um drag-and-drop
+Tal teste deve verificar que, após a seleção do arquivo, o nome correto do arquivo é persistido no objeto de files do input*/
+
+it('seleciona um arquivo da pasta fixtures', () => {
+  cy.get('#firstName').type('Paulo Henrique')
+  cy.get('#lastName').type('Cruz')
+  cy.get('#email').type('manuella@gmail.com')
+  cy.get('#open-text-area').type('Testando upload de arquivos.') 
+  cy.get('#file-upload') 
+    .selectFile('cypress/fixtures/example.json') //referência do projeto local
+    .should(input => {
+      expect(input[0].files[0].name).to.equal('example.json') //verificação do arquivo 
+    })       
+})
+
+/*Exercício extra 1
+Crie um teste chamado seleciona um arquivo simulando um drag-and-drop
+Tal teste deve verificar que, após a seleção do arquivo, o nome correto do arquivo é persistido no objeto de files do input */
+it('seleciona um arquivo simulando um drag-and-drop', () => {
+  cy.get('#firstName').type('Paulo Henrique')
+  cy.get('#lastName').type('Cruz')
+  cy.get('#email').type('manuella@gmail.com')
+  cy.get('#open-text-area').type('Testando upload de arquivos.') 
+  cy.get('#file-upload') 
+    .selectFile('cypress/fixtures/example.json', {action: 'drag-drop'}) //drag-drop = abre uma pasta e clica e arrasta o arquivo para upload
+    .should(input => {
+      expect(input[0].files[0].name).to.equal('example.json') //verificação do arquivo 
+    }) 
+})
+
+/*Exercício extra 2
+Crie um teste chamado seleciona um arquivo utilizando uma fixture para a qual foi dada um alias
+Tal teste deve verificar que, após a seleção do arquivo, o nome correto do arquivo é persistido no objeto de files do input*/
+it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', () => {
+  cy.get('#firstName').type('Paulo Henrique')
+  cy.get('#lastName').type('Cruz')
+  cy.get('#email').type('manuella@gmail.com')
+  cy.get('#open-text-area').type('Testando upload de arquivos.') 
+
+  cy.fixture('example.json').as('sampleFile') //quando usamos cy.fixture, não precisa passar o caminho como feito anteriormente. o Cypress já mapeia
+  cy.get('#file-upload') 
+    .selectFile('@sampleFile', {action: 'drag-drop'}) //passando o alias contendo o caminho relativo  
+    .should(input => {
+      expect(input[0].files[0].name).to.equal('example.json') //verificação do arquivo 
+    }) 
+})
+
+/*=======================================
+Lidando com links que abrem em outra aba
+/*=======================================*/
+
+/*Exercício
+Crie um teste chamado verifica que a política de privacidade abre em outra aba sem a necessidade de um clique
+Tal teste deve utilizar a alternativa 1 demonstrada acima*/
+it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+  cy.get('#firstName').type('Paulo Henrique')
+  cy.get('#lastName').type('Cruz')
+  cy.get('#email').type('manuella@gmail.com')
+  cy.get('#open-text-area').type('Testando abertura de links em outra aba.') 
+
+  cy.contains('a', 'Política de Privacidade')
+    .should('have.attr', 'href', 'privacy.html') //verifica se tem o atributo href com o valor 'privacy.html'
+    .and('have.attr', 'target', '_blank')  //verifica se tem o atributo target com o valor '_blank' que faz abrir em uma nova aba
+    //o ".and" foi usado para não ficar repetindo o .should
+})
+
+})
