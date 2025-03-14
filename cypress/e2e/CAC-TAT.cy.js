@@ -1,7 +1,6 @@
 describe('Central de Atendimento ao Cliente TAT', () => {
   beforeEach(() => {  //antes do início de cada teste, esse bloco será executado
-    cy.visit('./src/index.html')  //caminho da página local do projeto
-    cy.viewport(410, 860)  //redimensionando o navegador
+    cy.visit('./src/index.html')  //caminho da página local do projeto    
   })
 
   it('verifica o título da aplicação', () => {    
