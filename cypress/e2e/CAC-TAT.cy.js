@@ -259,4 +259,20 @@ it('verifica que a política de privacidade abre em outra aba sem a necessidade 
     //o ".and" foi usado para não ficar repetindo o .should
 })
 
+/*Exercício extra 1
+Crie um testes chamado acessa a página da política de privacidade removendo o target e então clicando no link
+Tal teste deve utilizar a alternativa 2 demonstrada acima*/
+it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+  cy.get('#firstName').type('Paulo Henrique')
+  cy.get('#lastName').type('Cruz')
+  cy.get('#email').type('manuella@gmail.com')
+  cy.get('#open-text-area').type('Testando abertura de links em outra aba.') 
+
+  cy.contains('a', 'Política de Privacidade')
+    .invoke('removeAttr', 'target') //remove o target="_blank", que leva para uma nova aba
+    .click()
+    
+  cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
+})
+
 })
