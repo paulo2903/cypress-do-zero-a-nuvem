@@ -8,13 +8,19 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('preenche os campos obrigatórios e envia o formulário', () =>{   //o "only" serve para indicar que queremos que execute "somente" aquele teste específico
+    cy.clock() //congela o relógio do navegador
+
     cy.get('#firstName').type('Paulo Henrique')  //quando tem # é porque o elemento é um id
-    cy.get('#lastName').type('Oliveira da Cruz')
+    cy.get('#lastName').type('Oliveira da Cruz')    
     cy.get('#email').type('pauloh.2903@gmail.com')
     cy.get('#open-text-area').type('Obrigado pela MANUELLA!!!')
     cy.contains('button', 'Enviar').click() 
 
     cy.get('.success').should('be.visible')
+
+    cy.tick(3000) //avança o relógio do navegador
+
+    cy.get('.success').should('not.be.visible')
   })
 
 
@@ -274,5 +280,46 @@ it('acessa a página da política de privacidade removendo o target e então cli
     
   cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
 })
+
+
+it('exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
+})
+
+
+it('preenche o campo da área de texto usando o comando invoke', () => {
+  cy.get('#open-text-area')
+    .invoke('val', 'Manuella é a minha princesinha linda!')
+    .should('have.value', 'Manuella é a minha princesinha linda!') 
+})
+
+it('faz uma requisição HTTP', () => {
+  cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
+    .as('getRequest')
+    .its('status')
+    .should('be.equal', 200)
+  cy.get('@getRequest')
+    .its('statusText')
+    .should('be.equal', 'OK')
+  cy.get('@getRequest')
+    .its('body')
+    .should('include', 'CAC TAT')
+})
+
+
+
 
 })
