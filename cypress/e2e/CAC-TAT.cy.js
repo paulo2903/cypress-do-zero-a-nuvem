@@ -319,7 +319,15 @@ it('faz uma requisição HTTP', () => {
     .should('include', 'CAC TAT')
 })
 
-
+it('encontra o gato escondido', () => {
+  cy.get('#cat')
+    .invoke('show')
+    .should('be.visible')
+  cy.get('#title')
+    .invoke('text', 'CAT TAT MANUELLA') //mudando o title
+  cy.get('#subtitle')
+    .invoke('text', 'Eu amo minha filhinha Manuella') //mudando o subtitle
+})
 
 
 })
